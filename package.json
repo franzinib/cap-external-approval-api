@@ -1,0 +1,67 @@
+{
+  "name": "cap-external-approval-api",
+  "version": "1.0.0",
+  "description": "External Approval API for Sourcing and SLP",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^5.9.5",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@sap/ux-specification": "^1.100.2",
+    "sqlite3": "^5.0.8"
+  },
+  "scripts": {
+    "start": "cds run",
+    "watch-ui5-changes": "cds watch --open ui5-changes/webapp/index.html?sap-ui-xx-viewCache=false#fe-lrop-v4",
+    "watch-ui5-task-changes": "cds watch --open ui5-task-changes/webapp/index.html?sap-ui-xx-viewCache=false#fe-lrop-v4"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "es2020": true,
+      "node": true,
+      "jest": true,
+      "mocha": true
+    },
+    "globals": {
+      "SELECT": true,
+      "INSERT": true,
+      "UPDATE": true,
+      "DELETE": true,
+      "CREATE": true,
+      "DROP": true,
+      "CDL": true,
+      "CQL": true,
+      "CXL": true,
+      "cds": true
+    },
+    "rules": {
+      "no-console": "off",
+      "require-atomic-updates": "off"
+    }
+  },
+  "cds": {
+    "requires": {
+      "AribaApi": {
+        "kind": "rest",
+        "credentials": {
+          "url": "https://sandbox.api.sap.com/ariba/api/sourcing-approval/v2/sandbox",
+          "queries": {
+            "realm": "mytestrealm"
+          },
+          "headers": {
+            "Accept": "application/json",
+            "apikey": "gP3q7vnlvTXVLRfMd2RvAz4zFCKdevj0"
+          }
+        }
+      }
+    }
+  },
+  "sapux": [
+    "app/ui5-changes",
+    "app/ui5-task-changes"
+  ]
+}
