@@ -6,15 +6,35 @@ module.exports = cds.service.impl(async function () {
     const AribaApi = await cds.connect.to("AribaApi");
 
     this.on("READ", "*", async (req, res) => {
-        try {
+        req.headers.accept = "application/json";
+        req.headers.apikey = process.env.apikey;
 
-            if (req.target.name === "AribaService.Task"){
+        if (req.target.name === "AribaService.Task"){
+            try {
                 return await AribaApi.tx(req).get("/Task");
-            } else if (req.target.name === "AribaService.Changes"){
+            } catch (e) {
+                if (e.innererror.response.status || e.innererror.response.body.description) {
+                    req.reject(e.innererror.response.status, e.innererror.response.body.description);
+                }
+            }
+        } else if (req.target.name === "AribaService.Changes"){
+            try {
                 return await AribaApi.tx(req).get("/changes");
-            } else if (req.target.name === "AribaService.PendingApprovables") {
+            } catch (e) {
+                if (e.innererror.response.status || e.innererror.response.body.description) {
+                    req.reject(e.innererror.response.status, e.innererror.response.body.description);
+                }
+            }
+        } else if (req.target.name === "AribaService.PendingApprovables") {
+            try {
                 return await AribaApi.tx(req).get("/pendingApprovables");
-            } else if (req.target.name === "AribaService.TaskChanges") {
+            } catch (e) {
+                if (e.innererror.response.status || e.innererror.response.body.description) {
+                    req.reject(e.innererror.response.status, e.innererror.response.body.description);
+                }
+            }
+        } else if (req.target.name === "AribaService.TaskChanges") {
+            try {
                 const taskList = await AribaApi.tx(req).get("/Task");
                 //buble sorting
                 taskList.sort(function(a,b) {return a.id-b.id;});
@@ -27,10 +47,10 @@ module.exports = cds.service.impl(async function () {
                 items.sort(function(a,b) {return a.approvableUniqueName-b.approvableUniqueName;});
 
                 return items;
-            }
-        } catch (e) {
-            if (e.innererror.response.status || e.innererror.response.body.description) {
-                req.reject(e.innererror.response.status, e.innererror.response.body.description);
+            } catch (e) {
+                if (e.innererror.response.status || e.innererror.response.body.description) {
+                    req.reject(e.innererror.response.status, e.innererror.response.body.description);
+                }
             }
         }
     });
